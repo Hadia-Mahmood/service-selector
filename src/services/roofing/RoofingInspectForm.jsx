@@ -4,57 +4,58 @@ import FormQuestion from '../../components/FormQuestion';
 
 const RoofingInspectForm = ({ onComplete }) => {
   // State for questions
-  const [roofSlope, setRoofSlope] = useState("");
-  const [flatRoofType, setFlatRoofType] = useState("");
-  const [flatRoofOther, setFlatRoofOther] = useState("");
-  const [slopedRoofType, setSlopedRoofType] = useState("");
-  const [slopedRoofOther, setSlopedRoofOther] = useState("");
   const [inspectionReason, setInspectionReason] = useState("");
   const [inspectionReasonOther, setInspectionReasonOther] = useState("");
-  const [previousDamage, setPreviousDamage] = useState("");
+  const [roofType, setRoofType] = useState("");
+  const [roofAge, setRoofAge] = useState("");
+  const [leakConcern, setLeakConcern] = useState("");
+  const [certificationNeeded, setCertificationNeeded] = useState("");
+  const [squareFootage, setSquareFootage] = useState("");
   const [stories, setStories] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [formProgress, setFormProgress] = useState(0);
   
   // Form options
-  const roofSlopeOptions = [
-    "Sloped or pitched", 
-    "Flat"
-  ];
-  
-  const flatRoofOptions = [
-    "I'm not sure",
-    "PVC single-ply membrane",
-    "TPO single-ply membrane",
-    "Torch down modified bitumen",
-    "EPDM rubber membrane",
-    "Silicone spray",
-    "Built-up tar and gravel",
+  const reasonOptions = [
+    "General maintenance inspection",
+    "Pre-purchase home inspection",
+    "Insurance requirement",
+    "Suspected damage/leak",
+    "Solar panel installation preparation",
+    "Roof warranty validation",
     "Other"
   ];
   
-  const slopedRoofOptions = [
-    "Asphalt or composite shingle",
-    "Wood shingle or shake",
-    "Tile",
-    "Metal",
-    "Slate",
+  const roofTypes = [
+    "Asphalt shingles", 
+    "Metal", 
+    "Tile", 
+    "Flat/Built-up", 
+    "Slate", 
+    "Wood shingles/shakes", 
     "I'm not sure",
     "Other"
   ];
   
-  const inspectionReasonOptions = [
-    "To get roof certified",
-    "To buy or sell the home",
-    "Just a routine check-up",
-    "To check for damage from recent bad weather",
-    "For an insurance claim",
-    "Other"
+  const ageOptions = [
+    "Less than 5 years",
+    "5-10 years",
+    "10-20 years",
+    "More than 20 years",
+    "I'm not sure"
   ];
   
   const yesNoOptions = [
     "Yes",
     "No",
+    "I'm not sure"
+  ];
+  
+  const squareFootageOptions = [
+    "Under 1000 sq ft",
+    "1000-2000 sq ft",
+    "2000-3000 sq ft",
+    "Over 3000 sq ft",
     "I'm not sure"
   ];
   
@@ -71,7 +72,7 @@ const RoofingInspectForm = ({ onComplete }) => {
 
   // Calculate the form progress
   useEffect(() => {
-    const totalQuestions = 5;
+    const totalQuestions = 7;
     const progress = Math.min(((currentQuestion - 1) / totalQuestions) * 100, 100);
     setFormProgress(progress);
   }, [currentQuestion]);
@@ -81,14 +82,13 @@ const RoofingInspectForm = ({ onComplete }) => {
     e.preventDefault();
     const formData = {
       projectType: "Inspect a roof",
-      roofSlope,
-      flatRoofType,
-      flatRoofOther,
-      slopedRoofType,
-      slopedRoofOther,
       inspectionReason,
       inspectionReasonOther,
-      previousDamage,
+      roofType,
+      roofAge,
+      leakConcern,
+      certificationNeeded,
+      squareFootage,
       stories
     };
     onComplete(formData);
@@ -112,94 +112,84 @@ const RoofingInspectForm = ({ onComplete }) => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormQuestion
-          question="Is your roof sloped or flat?"
-          options={roofSlopeOptions}
-          value={roofSlope}
+          question="What's the primary reason for the roof inspection?"
+          options={reasonOptions}
+          value={inspectionReason}
           onChange={(e) => {
-            setRoofSlope(e.target.value);
-            if (e.target.value === "Sloped or pitched") {
-              setCurrentQuestion(2);
-            } else {
-              setCurrentQuestion(1);
-            }
+            setInspectionReason(e.target.value);
+            setCurrentQuestion(2);
           }}
+          showTextbox={true}
+          textboxValue={inspectionReasonOther}
+          onTextboxChange={(e) => setInspectionReasonOther(e.target.value)}
           isVisible={showQuestion(1)}
         />
         
-        {roofSlope === "Flat" && (
-          <FormQuestion
-            question="What kind of roof do you have?"
-            options={flatRoofOptions}
-            value={flatRoofType}
-            onChange={(e) => {
-              setFlatRoofType(e.target.value);
-              setCurrentQuestion(3);
-            }}
-            showTextbox={flatRoofType === "Other"}
-            textboxValue={flatRoofOther}
-            onTextboxChange={(e) => setFlatRoofOther(e.target.value)}
-            isVisible={showQuestion(1)}
-          />
-        )}
+        <FormQuestion
+          question="What type of roof do you have?"
+          options={roofTypes}
+          value={roofType}
+          onChange={(e) => {
+            setRoofType(e.target.value);
+            setCurrentQuestion(3);
+          }}
+          isVisible={showQuestion(2)}
+        />
         
-        {roofSlope === "Sloped or pitched" && (
-          <FormQuestion
-            question="What kind of roof do you have?"
-            options={slopedRoofOptions}
-            value={slopedRoofType}
-            onChange={(e) => {
-              setSlopedRoofType(e.target.value);
-              setCurrentQuestion(3);
-            }}
-            showTextbox={slopedRoofType === "Other"}
-            textboxValue={slopedRoofOther}
-            onTextboxChange={(e) => setSlopedRoofOther(e.target.value)}
-            isVisible={showQuestion(2)}
-          />
-        )}
+        <FormQuestion
+          question="How old is your roof?"
+          options={ageOptions}
+          value={roofAge}
+          onChange={(e) => {
+            setRoofAge(e.target.value);
+            setCurrentQuestion(4);
+          }}
+          isVisible={showQuestion(3)}
+        />
         
-        {((roofSlope === "Flat" && flatRoofType) || 
-          (roofSlope === "Sloped or pitched" && slopedRoofType)) && (
-          <FormQuestion
-            question="Why does the roof need an inspection? Select all that apply."
-            options={inspectionReasonOptions}
-            value={inspectionReason}
-            onChange={(e) => {
-              setInspectionReason(e.target.value);
-              setCurrentQuestion(4);
-            }}
-            showTextbox={inspectionReason === "Other"}
-            textboxValue={inspectionReasonOther}
-            onTextboxChange={(e) => setInspectionReasonOther(e.target.value)}
-            isVisible={showQuestion(3)}
-          />
-        )}
+        <FormQuestion
+          question="Are you concerned about potential leaks or damage?"
+          options={yesNoOptions}
+          value={leakConcern}
+          onChange={(e) => {
+            setLeakConcern(e.target.value);
+            setCurrentQuestion(5);
+          }}
+          isVisible={showQuestion(4)}
+        />
         
-        {inspectionReason && (
-          <FormQuestion
-            question="Has the roof ever previously leaked or been damaged?"
-            options={yesNoOptions}
-            value={previousDamage}
-            onChange={(e) => {
-              setPreviousDamage(e.target.value);
-              setCurrentQuestion(5);
-            }}
-            isVisible={showQuestion(4)}
-          />
-        )}
+        <FormQuestion
+          question="Do you need a certified inspection report?"
+          options={yesNoOptions}
+          value={certificationNeeded}
+          onChange={(e) => {
+            setCertificationNeeded(e.target.value);
+            setCurrentQuestion(6);
+          }}
+          isVisible={showQuestion(5)}
+        />
         
-        {previousDamage && (
-          <FormQuestion
-            question="How many stories tall is your home?"
-            options={storyOptions}
-            value={stories}
-            onChange={(e) => {
-              setStories(e.target.value);
-              setCurrentQuestion(6);
-            }}
-            isVisible={showQuestion(5)}
-          />
-        )}
+        <FormQuestion
+          question="What's the approximate square footage of your home?"
+          options={squareFootageOptions}
+          value={squareFootage}
+          onChange={(e) => {
+            setSquareFootage(e.target.value);
+            setCurrentQuestion(7);
+          }}
+          isVisible={showQuestion(6)}
+        />
+        
+        <FormQuestion
+          question="How many stories tall is your home?"
+          options={storyOptions}
+          value={stories}
+          onChange={(e) => {
+            setStories(e.target.value);
+            setCurrentQuestion(8);
+          }}
+          isVisible={showQuestion(7)}
+        />
 
         {/* Submit Button */}
         {stories && (
