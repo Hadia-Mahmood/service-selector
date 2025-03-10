@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import FormQuestion from '../../components/FormQuestion';
 
@@ -240,10 +239,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setRoofType(e.target.value);
               setCurrentQuestion(3);
             }}
-            showTextbox={e.target.value === "Other"}
+            isVisible={showQuestion(2)}
+            showTextbox={roofType === "Other"}
             textboxValue={roofType === "Other" ? roofIssuesOther : ""}
             onTextboxChange={(e) => setRoofIssuesOther(e.target.value)}
-            isVisible={showQuestion(2)}
           />
         )}
         
@@ -256,10 +255,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setFlashingIssues(e.target.value);
               setCurrentQuestion(4);
             }}
+            isVisible={showQuestion(3)}
             showTextbox={flashingIssues === "Other"}
             textboxValue={flashingIssues === "Other" ? roofIssuesOther : ""}
             onTextboxChange={(e) => setRoofIssuesOther(e.target.value)}
-            isVisible={showQuestion(3)}
           />
         )}
         
@@ -272,10 +271,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setFlashingMaterial(e.target.value);
               setCurrentQuestion(14);
             }}
+            isVisible={showQuestion(4)}
             showTextbox={flashingMaterial === "Other"}
             textboxValue={flashingMaterial === "Other" ? roofIssuesOther : ""}
             onTextboxChange={(e) => setRoofIssuesOther(e.target.value)}
-            isVisible={showQuestion(4)}
           />
         )}
         
@@ -305,10 +304,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setFlatRoofType(e.target.value);
               setCurrentQuestion(11);
             }}
+            isVisible={showQuestion(6)}
             showTextbox={flatRoofType === "Other"}
             textboxValue={flatRoofOther}
             onTextboxChange={(e) => setFlatRoofOther(e.target.value)}
-            isVisible={showQuestion(6)}
           />
         )}
         
@@ -322,7 +321,7 @@ const RoofingRepairForm = ({ onComplete }) => {
               if (e.target.value === "Shingle or shake") {
                 setCurrentQuestion(8);
               } else if (e.target.value === "Tile") {
-                setCurrentQuestion(9);
+                setCurrentQuestion(10);
               } else {
                 setCurrentQuestion(10);
               }
@@ -339,7 +338,7 @@ const RoofingRepairForm = ({ onComplete }) => {
             onChange={(e) => {
               setShingleType(e.target.value);
               if (e.target.value === "Wood") {
-                // Don't advance yet
+                setCurrentQuestion(9);
               } else {
                 setCurrentQuestion(10);
               }
@@ -357,7 +356,7 @@ const RoofingRepairForm = ({ onComplete }) => {
               setWoodType(e.target.value);
               setCurrentQuestion(10);
             }}
-            isVisible={true}
+            isVisible={showQuestion(9)}
           />
         )}
         
@@ -370,10 +369,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setTileType(e.target.value);
               setCurrentQuestion(10);
             }}
+            isVisible={showQuestion(9)}
             showTextbox={tileType === "Other"}
             textboxValue={tileOther}
             onTextboxChange={(e) => setTileOther(e.target.value)}
-            isVisible={showQuestion(9)}
           />
         )}
         
@@ -389,10 +388,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setRoofIssues(e.target.value);
               setCurrentQuestion(12);
             }}
+            isVisible={showQuestion(10)}
             showTextbox={roofIssues === "Other"}
             textboxValue={roofIssuesOther}
             onTextboxChange={(e) => setRoofIssuesOther(e.target.value)}
-            isVisible={showQuestion(10)}
           />
         )}
         
@@ -405,10 +404,10 @@ const RoofingRepairForm = ({ onComplete }) => {
               setFlatRoofIssues(e.target.value);
               setCurrentQuestion(12);
             }}
+            isVisible={showQuestion(11)}
             showTextbox={flatRoofIssues === "Other"}
             textboxValue={flatRoofIssuesOther}
             onTextboxChange={(e) => setFlatRoofIssuesOther(e.target.value)}
-            isVisible={showQuestion(11)}
           />
         )}
         
