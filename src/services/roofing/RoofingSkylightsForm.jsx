@@ -5,74 +5,55 @@ import FormQuestion from '../../components/FormQuestion';
 const RoofingSkylightsForm = ({ onComplete }) => {
   // State for questions
   const [skylightProject, setSkylightProject] = useState("");
-  const [skylightType, setSkylightType] = useState("");
+  const [skylightProjectOther, setSkylightProjectOther] = useState("");
   const [skylightCount, setSkylightCount] = useState("");
-  const [openingType, setOpeningType] = useState("");
-  const [skylightBrand, setSkylightBrand] = useState("");
-  const [skylightBrandOther, setSkylightBrandOther] = useState("");
-  const [leakingIssue, setLeakingIssue] = useState("");
-  const [squareFootage, setSquareFootage] = useState("");
+  const [skylightIssues, setSkylightIssues] = useState("");
+  const [skylightIssuesOther, setSkylightIssuesOther] = useState("");
+  const [installCount, setInstallCount] = useState("");
+  const [installType, setInstallType] = useState("");
+  const [roofType, setRoofType] = useState("");
+  const [roofTypeOther, setRoofTypeOther] = useState("");
   const [stories, setStories] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [formProgress, setFormProgress] = useState(0);
   
   // Form options
   const projectTypes = [
-    "Install new skylight(s)",
-    "Replace existing skylight(s)",
-    "Repair skylight leak",
-    "Clean skylight(s)",
-    "Other maintenance"
-  ];
-  
-  const skylightTypes = [
-    "Fixed (non-opening)",
-    "Vented (opens and closes)",
-    "Tubular/Sun tunnel",
-    "Custom design",
-    "I'm not sure"
+    "Install a skylight",
+    "Repair or maintain a skylight",
+    "Other"
   ];
   
   const countOptions = [
     "1",
     "2",
-    "3",
-    "4",
-    "5+",
-    "I'm not sure yet"
+    "3 or more"
   ];
   
-  const openingOptions = [
-    "Manual (hand crank)",
-    "Electric/Motorized",
-    "Solar-powered",
-    "I'm not sure",
-    "Not applicable (fixed skylight)"
-  ];
-  
-  const brandOptions = [
-    "VELUX",
-    "Fakro",
-    "Andersen",
-    "CrystaLite",
-    "Wasco",
-    "ODL",
-    "I don't know",
+  const skylightIssuesOptions = [
+    "Leaking and dampness around skylight",
+    "Cracked or broken glass",
+    "Fogging between glass panes",
+    "Malfunctioning skylight shade",
+    "Malfunctioning skylight opener",
     "Other"
   ];
   
-  const yesNoOptions = [
-    "Yes",
-    "No",
-    "I'm not sure"
+  const installTypeOptions = [
+    "Replace existing skylight",
+    "Install a new skylight",
+    "Both"
   ];
   
-  const squareFootageOptions = [
-    "Under 1000 sq ft",
-    "1000-2000 sq ft",
-    "2000-3000 sq ft",
-    "Over 3000 sq ft",
-    "I'm not sure"
+  const roofTypeOptions = [
+    "Asphalt or composite shingle",
+    "Wood shingle or shake",
+    "Tile",
+    "Metal",
+    "Single ply or rubber membrane",
+    "Built-up tar and gravel",
+    "I'm not sure",
+    "Other"
   ];
   
   const storyOptions = [
@@ -99,13 +80,14 @@ const RoofingSkylightsForm = ({ onComplete }) => {
     const formData = {
       projectType: "Install, repair or maintain skylights",
       skylightProject,
-      skylightType,
+      skylightProjectOther,
       skylightCount,
-      openingType,
-      skylightBrand,
-      skylightBrandOther,
-      leakingIssue,
-      squareFootage,
+      skylightIssues,
+      skylightIssuesOther,
+      installCount,
+      installType,
+      roofType,
+      roofTypeOther,
       stories
     };
     onComplete(formData);
@@ -129,103 +111,124 @@ const RoofingSkylightsForm = ({ onComplete }) => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormQuestion
-          question="What type of skylight project do you need?"
+          question="Do you want to install or repair a skylight?"
           options={projectTypes}
           value={skylightProject}
           onChange={(e) => {
             setSkylightProject(e.target.value);
-            setCurrentQuestion(2);
+            if (e.target.value === "Install a skylight") {
+              setCurrentQuestion(5);
+            } else if (e.target.value === "Repair or maintain a skylight") {
+              setCurrentQuestion(3);
+            } else {
+              setCurrentQuestion(2);
+            }
           }}
+          showTextbox={skylightProject === "Other"}
+          textboxValue={skylightProjectOther}
+          onTextboxChange={(e) => setSkylightProjectOther(e.target.value)}
           isVisible={showQuestion(1)}
         />
         
-        {(skylightProject === "Install new skylight(s)" || skylightProject === "Replace existing skylight(s)") && (
+        {skylightProject === "Other" && (
           <FormQuestion
-            question="What type of skylight are you interested in?"
-            options={skylightTypes}
-            value={skylightType}
+            question="How many skylights are part of this project?"
+            options={countOptions}
+            value={skylightCount}
             onChange={(e) => {
-              setSkylightType(e.target.value);
-              setCurrentQuestion(3);
+              setSkylightCount(e.target.value);
+              setCurrentQuestion(8);
             }}
             isVisible={showQuestion(2)}
           />
         )}
         
-        <FormQuestion
-          question="How many skylights are involved in this project?"
-          options={countOptions}
-          value={skylightCount}
-          onChange={(e) => {
-            setSkylightCount(e.target.value);
-            setCurrentQuestion(skylightProject === "Install new skylight(s)" || skylightProject === "Replace existing skylight(s)" ? 4 : 3);
-          }}
-          isVisible={skylightProject === "Install new skylight(s)" || skylightProject === "Replace existing skylight(s)" ? showQuestion(3) : showQuestion(2)}
-        />
-        
-        {skylightType === "Vented (opens and closes)" && (
+        {skylightProject === "Repair or maintain a skylight" && (
           <FormQuestion
-            question="What type of opening mechanism do you prefer?"
-            options={openingOptions}
-            value={openingType}
+            question="How many skylights do you want to repair or maintain?"
+            options={countOptions}
+            value={skylightCount}
             onChange={(e) => {
-              setOpeningType(e.target.value);
-              setCurrentQuestion(5);
+              setSkylightCount(e.target.value);
+              setCurrentQuestion(4);
             }}
+            isVisible={showQuestion(3)}
+          />
+        )}
+        
+        {skylightProject === "Repair or maintain a skylight" && skylightCount && (
+          <FormQuestion
+            question="What issues have you noticed? Select all that apply."
+            options={skylightIssuesOptions}
+            value={skylightIssues}
+            onChange={(e) => {
+              setSkylightIssues(e.target.value);
+              setCurrentQuestion(7);
+            }}
+            showTextbox={skylightIssues === "Other"}
+            textboxValue={skylightIssuesOther}
+            onTextboxChange={(e) => setSkylightIssuesOther(e.target.value)}
             isVisible={showQuestion(4)}
           />
         )}
         
-        {skylightProject === "Replace existing skylight(s)" || skylightProject === "Repair skylight leak" && (
+        {skylightProject === "Install a skylight" && (
           <FormQuestion
-            question="What brand is your existing skylight?"
-            options={brandOptions}
-            value={skylightBrand}
+            question="How many skylights do you want to install?"
+            options={countOptions}
+            value={installCount}
             onChange={(e) => {
-              setSkylightBrand(e.target.value);
-              setCurrentQuestion(skylightType === "Vented (opens and closes)" ? 6 : 5);
+              setInstallCount(e.target.value);
+              setCurrentQuestion(6);
             }}
-            showTextbox={true}
-            textboxValue={skylightBrandOther}
-            onTextboxChange={(e) => setSkylightBrandOther(e.target.value)}
-            isVisible={skylightType === "Vented (opens and closes)" ? showQuestion(5) : showQuestion(4)}
+            isVisible={showQuestion(5)}
           />
         )}
         
-        {skylightProject === "Repair skylight leak" && (
+        {skylightProject === "Install a skylight" && installCount && (
           <FormQuestion
-            question="Is the skylight actively leaking now?"
-            options={yesNoOptions}
-            value={leakingIssue}
+            question="Do you want to replace an existing skylight or install a new one?"
+            options={installTypeOptions}
+            value={installType}
             onChange={(e) => {
-              setLeakingIssue(e.target.value);
-              setCurrentQuestion(skylightType === "Vented (opens and closes)" ? 7 : 6);
+              setInstallType(e.target.value);
+              setCurrentQuestion(7);
             }}
-            isVisible={skylightType === "Vented (opens and closes)" ? showQuestion(6) : showQuestion(5)}
+            isVisible={showQuestion(6)}
           />
         )}
         
-        <FormQuestion
-          question="What's the approximate square footage of your home?"
-          options={squareFootageOptions}
-          value={squareFootage}
-          onChange={(e) => {
-            setSquareFootage(e.target.value);
-            setCurrentQuestion(8);
-          }}
-          isVisible={showQuestion(7)}
-        />
+        {((skylightProject === "Install a skylight" && installType) || 
+          (skylightProject === "Repair or maintain a skylight" && skylightIssues)) && (
+          <FormQuestion
+            question="What kind of roof do you have?"
+            options={roofTypeOptions}
+            value={roofType}
+            onChange={(e) => {
+              setRoofType(e.target.value);
+              setCurrentQuestion(8);
+            }}
+            showTextbox={roofType === "Other"}
+            textboxValue={roofTypeOther}
+            onTextboxChange={(e) => setRoofTypeOther(e.target.value)}
+            isVisible={showQuestion(7)}
+          />
+        )}
         
-        <FormQuestion
-          question="How many stories tall is your home?"
-          options={storyOptions}
-          value={stories}
-          onChange={(e) => {
-            setStories(e.target.value);
-            setCurrentQuestion(9);
-          }}
-          isVisible={showQuestion(8)}
-        />
+        {((skylightProject === "Install a skylight" && roofType) || 
+          (skylightProject === "Repair or maintain a skylight" && roofType) ||
+          (skylightProject === "Other" && skylightCount)) && (
+          <FormQuestion
+            question="How many stories tall is your home?"
+            options={storyOptions}
+            value={stories}
+            onChange={(e) => {
+              setStories(e.target.value);
+              setCurrentQuestion(9);
+            }}
+            isVisible={showQuestion(8)}
+          />
+        )}
 
         {/* Submit Button */}
         {stories && (

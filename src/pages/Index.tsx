@@ -130,9 +130,7 @@ const Index = () => {
                   }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 >
-                  <option value="" name="">
-                    Select a Service
-                  </option>
+                  <option value="">Select a Service</option>
                   {services?.map((item, index) => (
                     <option key={index} value={item._id}>
                       {item?.name}
