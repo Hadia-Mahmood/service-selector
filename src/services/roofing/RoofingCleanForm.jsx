@@ -5,59 +5,40 @@ import FormQuestion from '../../components/FormQuestion';
 const RoofingCleanForm = ({ onComplete }) => {
   // State for questions
   const [roofType, setRoofType] = useState("");
+  const [roofTypeOther, setRoofTypeOther] = useState("");
   const [cleaningReason, setCleaningReason] = useState("");
   const [cleaningReasonOther, setCleaningReasonOther] = useState("");
   const [lastCleaned, setLastCleaned] = useState("");
-  const [mossGrowth, setMossGrowth] = useState("");
-  const [squareFootage, setSquareFootage] = useState("");
   const [stories, setStories] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [formProgress, setFormProgress] = useState(0);
   
   // Form options
   const roofTypes = [
-    "Asphalt shingles", 
-    "Metal", 
+    "Asphalt or composite shingle", 
+    "Wood shingle or shake", 
     "Tile", 
-    "Flat/Built-up", 
-    "Slate", 
-    "Wood shingles/shakes", 
+    "Metal", 
+    "Single ply or rubber membrane", 
+    "Built-up tar or gravel", 
     "I'm not sure",
     "Other"
   ];
   
   const cleaningReasons = [
-    "Moss or algae removal",
-    "General cleaning/maintenance",
-    "Preparing for coating or treatment",
-    "Preparing to sell the home",
-    "Visible stains/discoloration",
-    "Gutter cleaning included",
+    "Moss removal",
+    "Mold, fungus or mildew removal",
+    "Stain and discoloration removal",
+    "Preventative maintenance",
+    "Dirt and debris removal",
     "Other"
   ];
   
   const lastCleanedOptions = [
-    "Never been cleaned",
-    "Within the last year",
-    "1-3 years ago",
-    "3-5 years ago",
-    "More than 5 years ago",
-    "I'm not sure"
-  ];
-  
-  const mossOptions = [
-    "Severe (covering large areas)",
-    "Moderate (visible patches)",
-    "Light (just beginning to grow)",
-    "None",
-    "I'm not sure"
-  ];
-  
-  const squareFootageOptions = [
-    "Under 1000 sq ft",
-    "1000-2000 sq ft",
-    "2000-3000 sq ft",
-    "Over 3000 sq ft",
+    "Less than 1 year ago",
+    "1-2 years ago",
+    "More than 2 years ago",
+    "Never",
     "I'm not sure"
   ];
   
@@ -74,7 +55,7 @@ const RoofingCleanForm = ({ onComplete }) => {
 
   // Calculate the form progress
   useEffect(() => {
-    const totalQuestions = 6;
+    const totalQuestions = 4;
     const progress = Math.min(((currentQuestion - 1) / totalQuestions) * 100, 100);
     setFormProgress(progress);
   }, [currentQuestion]);
@@ -85,11 +66,10 @@ const RoofingCleanForm = ({ onComplete }) => {
     const formData = {
       projectType: "Clean a roof",
       roofType,
+      roofTypeOther,
       cleaningReason,
       cleaningReasonOther,
       lastCleaned,
-      mossGrowth,
-      squareFootage,
       stories
     };
     onComplete(formData);
@@ -113,32 +93,35 @@ const RoofingCleanForm = ({ onComplete }) => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormQuestion
-          question="What type of roof do you have?"
+          question="What kind of roof do you have?"
           options={roofTypes}
           value={roofType}
           onChange={(e) => {
             setRoofType(e.target.value);
             setCurrentQuestion(2);
           }}
+          showTextbox={roofType === "Other"}
+          textboxValue={roofTypeOther}
+          onTextboxChange={(e) => setRoofTypeOther(e.target.value)}
           isVisible={showQuestion(1)}
         />
         
         <FormQuestion
-          question="Why are you looking to clean your roof?"
+          question="Why does the roof need cleaning? Select all that apply."
           options={cleaningReasons}
           value={cleaningReason}
           onChange={(e) => {
             setCleaningReason(e.target.value);
             setCurrentQuestion(3);
           }}
-          showTextbox={true}
+          showTextbox={cleaningReason === "Other"}
           textboxValue={cleaningReasonOther}
           onTextboxChange={(e) => setCleaningReasonOther(e.target.value)}
           isVisible={showQuestion(2)}
         />
         
         <FormQuestion
-          question="When was the last time your roof was professionally cleaned?"
+          question="Approximately when was the roof last cleaned?"
           options={lastCleanedOptions}
           value={lastCleaned}
           onChange={(e) => {
@@ -149,36 +132,14 @@ const RoofingCleanForm = ({ onComplete }) => {
         />
         
         <FormQuestion
-          question="Is there moss or algae growth on the roof?"
-          options={mossOptions}
-          value={mossGrowth}
-          onChange={(e) => {
-            setMossGrowth(e.target.value);
-            setCurrentQuestion(5);
-          }}
-          isVisible={showQuestion(4)}
-        />
-        
-        <FormQuestion
-          question="What's the approximate square footage of your home?"
-          options={squareFootageOptions}
-          value={squareFootage}
-          onChange={(e) => {
-            setSquareFootage(e.target.value);
-            setCurrentQuestion(6);
-          }}
-          isVisible={showQuestion(5)}
-        />
-        
-        <FormQuestion
           question="How many stories tall is your home?"
           options={storyOptions}
           value={stories}
           onChange={(e) => {
             setStories(e.target.value);
-            setCurrentQuestion(7);
+            setCurrentQuestion(5);
           }}
-          isVisible={showQuestion(6)}
+          isVisible={showQuestion(4)}
         />
 
         {/* Submit Button */}

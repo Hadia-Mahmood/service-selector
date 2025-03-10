@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { USStates } from '../../common/Constant';
 
-const CarpenterForm = ({ userData, onSubmit, setcompleted }) => {
+const CarpenterForm = ({ userData, onSubmit, serviceName = "Carpenter" }) => {
+  const navigate = useNavigate();
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -33,7 +35,7 @@ const CarpenterForm = ({ userData, onSubmit, setcompleted }) => {
 
   return (
     <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Carpenter Service Request</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">{serviceName} Service Request</h2>
       <form onSubmit={handleSubmit}>
         {/* Project Details */}
         <div className="mb-4">
